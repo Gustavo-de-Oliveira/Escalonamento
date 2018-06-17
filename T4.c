@@ -26,10 +26,18 @@ int main(int argc, char const *argv[]){
 		scanf("%c", &objeto);
 		if(objeto == 'p'){
 			for (int i = 0; i < nCoeficientes; ++i){
-					scanf("%d %d", &matriz[i]->numerador, &matriz[i]->denominador);
-				}	
-		} else {
-
+					scanf("%d %d", &matriz[qntdEquacoes][i].numerador, &matriz[qntdEquacoes][i].denominador);
+				}
+				qntdEquacoes++;
+		} else if(objeto == 'r'){
+			for (int i = 0; i < nCoeficientes; ++i){
+					scanf("%d %d", &matriz[qntdEquacoes][i].numerador, &matriz[qntdEquacoes][i].denominador);
+				}
+				qntdEquacoes++;
+			for (int i = 0; i < nCoeficientes; ++i){
+					scanf("%d %d", &matriz[qntdEquacoes][i].numerador, &matriz[qntdEquacoes][i].denominador);
+				}
+				qntdEquacoes++;
 		}
 	} while (qntdEquacoes < nEquacoes);
 
