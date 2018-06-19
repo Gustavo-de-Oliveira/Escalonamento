@@ -65,9 +65,10 @@ int main(int argc, char const *argv[]){
 
 void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha){
 	int totalNumerador = 0, totalDenominador = 0;
+	fracao fator;
 	for (int i = inicioLinha; i < nEquacoes; ++i){
 			if (matriz[i][inicioLinha].numerador != 0){
-				for (int j = inicioColuna; j < nCoeficientes; ++j){
+				for (int j = inicioLinha; j < nCoeficientes; ++j){
 					totalNumerador = matriz[i][j].numerador;
 					totalDenominador = matriz[i][j].denominador;
 
@@ -84,8 +85,11 @@ void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha){
 				for (int i = inicioLinha+1; i < nEquacoes; ++i){
 					for (int j = inicioLinha; j < nCoeficientes; ++j){
 						//matriz[i][j] -= matriz[inicioLinha][j] * (matriz[i][inicioLinha]/matriz[inicioLinha][inicioLinha]);
+						fator.numerador = matriz[i][inicioLinha].numerador * matriz[inicioLinha][inicioLinha].denominador;
+						fator.denominador = matriz[i][inicioLinha].denominador * matriz[inicioLinha][inicioLinha].numerador;
 
-						
+						matriz[inicioLinha][j].numerador = matriz[inicioLinha][j].numerador * fator.numerador;
+						matriz[inicioLinha][j].denominador = matriz[inicioLinha][j].denominador * fator.denominador;
 					}
 				}
 			}
