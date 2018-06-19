@@ -12,11 +12,12 @@ typedef struct fracao{
 	int denominador;
 } fracao;
 
-void Swap(fracao **matriz, int nEquacoes, int nCoeficientes);
+void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha);
 
 int main(int argc, char const *argv[]){
 	int nEquacoes = 0, nCoeficientes = 0, qntdEquacoes = 0;
 	char objeto;
+	fracao pivo;
 
 	scanf("%d %d", &nEquacoes, &nCoeficientes);
 	scanf("%c", &objeto);
@@ -48,9 +49,7 @@ int main(int argc, char const *argv[]){
 		}
 	} while (qntdEquacoes < nEquacoes);
 
-	if (matriz[0][0].numerador == 0){
-		Swap(matriz, nEquacoes, nCoeficientes);
-	}
+	Swap(matriz, nEquacoes, nCoeficientes, 0);
 
 	for (int i = 0; i < 3; ++i)
 	{
@@ -64,23 +63,31 @@ int main(int argc, char const *argv[]){
 	return 0;
 }
 
-void Swap(fracao **matriz, int nEquacoes, int nCoeficientes){
+void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha){
 	int totalNumerador = 0, totalDenominador = 0;
-	for (int i = 0; i < nEquacoes; ++i){
-			if (matriz[i][0].numerador != 0){
-				for (int j = 0; j < nCoeficientes; ++j){
+	for (int i = inicioLinha; i < nEquacoes; ++i){
+			if (matriz[i][inicioLinha].numerador != 0){
+				for (int j = inicioColuna; j < nCoeficientes; ++j){
 					totalNumerador = matriz[i][j].numerador;
 					totalDenominador = matriz[i][j].denominador;
 
-					matriz[i][j].numerador = matriz[0][j].numerador;
-					matriz[i][j].denominador = matriz[0][j].denominador;
+					matriz[i][j].numerador = matriz[inicioLinha][j].numerador;
+					matriz[i][j].denominador = matriz[inicioLinha][j].denominador;
 
-					matriz[0][j].numerador = totalNumerador;
-					matriz[0][j].denominador = totalDenominador;
+					matriz[inicioLinha][j].numerador = totalNumerador;
+					matriz[inicioLinha][j].denominador = totalDenominador;
 
 					totalNumerador = 0; totalDenominador = 0;
 				}
 				break;
+
+				for (int i = inicioLinha+1; i < nEquacoes; ++i){
+					for (int j = inicioLinha; j < nCoeficientes; ++j){
+						//matriz[i][j] -= matriz[inicioLinha][j] * (matriz[i][inicioLinha]/matriz[inicioLinha][inicioLinha]);
+
+						
+					}
+				}
 			}
 		}	
 }
