@@ -98,10 +98,17 @@ void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha){
 				equacao.denominador *= fator.denominador;
 
 				matriz[i][j].denominador *= equacao.denominador;
-				
+
+				if (matriz[i][j].numerador != 0) matriz[i][j].numerador = matriz[i][j].denominador/matriz[i][j].numerador;
+				if (equacao.numerador != 0) equacao.numerador = matriz[i][j].denominador/equacao.numerador;
+
+				matriz[i][j].numerador -= equacao.numerador;
+				equacao.numerador -= matriz[i][j].numerador;
 			}
 		}
 	}
+
+	Swap(matriz, nEquacoes, nCoeficientes, inicioLinha+1);
 }
 /*
 3 4
