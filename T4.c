@@ -67,35 +67,39 @@ void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha){
 	int totalNumerador = 0, totalDenominador = 0;
 	fracao fator;
 	for (int i = inicioLinha; i < nEquacoes; ++i){
-			if (matriz[i][inicioLinha].numerador != 0){
-				for (int j = inicioLinha; j < nCoeficientes; ++j){
-					totalNumerador = matriz[i][j].numerador;
-					totalDenominador = matriz[i][j].denominador;
+		if (matriz[i][inicioLinha].numerador != 0){
+			for (int j = inicioLinha; j < nCoeficientes; ++j){
+				totalNumerador = matriz[i][j].numerador;
+				totalDenominador = matriz[i][j].denominador;
 
-					matriz[i][j].numerador = matriz[inicioLinha][j].numerador;
-					matriz[i][j].denominador = matriz[inicioLinha][j].denominador;
+				matriz[i][j].numerador = matriz[inicioLinha][j].numerador;
+				matriz[i][j].denominador = matriz[inicioLinha][j].denominador;
 
-					matriz[inicioLinha][j].numerador = totalNumerador;
-					matriz[inicioLinha][j].denominador = totalDenominador;
+				matriz[inicioLinha][j].numerador = totalNumerador;
+				matriz[inicioLinha][j].denominador = totalDenominador;
 
-					totalNumerador = 0; totalDenominador = 0;
-				}
-				break;
-
-				for (int i = inicioLinha+1; i < nEquacoes; ++i){
-					for (int j = inicioLinha; j < nCoeficientes; ++j){
-						//matriz[i][j] -= matriz[inicioLinha][j] * (matriz[i][inicioLinha]/matriz[inicioLinha][inicioLinha]);
-						fator.numerador = matriz[i][inicioLinha].numerador * matriz[inicioLinha][inicioLinha].denominador;
-						fator.denominador = matriz[i][inicioLinha].denominador * matriz[inicioLinha][inicioLinha].numerador;
-
-						matriz[inicioLinha][j].numerador = matriz[inicioLinha][j].numerador * fator.numerador;
-						matriz[inicioLinha][j].denominador = matriz[inicioLinha][j].denominador * fator.denominador;
-					}
-				}
+				totalNumerador = 0; totalDenominador = 0;
 			}
-		}	
-}
+			break;
+		}
+	}
 
+	for (int i = inicioLinha+1; i < nEquacoes; ++i){
+		fator.numerador = matriz[i][inicioLinha].numerador * matriz[inicioLinha][inicioLinha].denominador;
+		fator.denominador = matriz[i][inicioLinha].denominador * matriz[inicioLinha][inicioLinha].numerador;
+
+		if (fator.numerador != 0){
+			for (int j = inicioLinha; j < nCoeficientes; ++j){
+				//matriz[i][j] -= matriz[inicioLinha][j] * (matriz[i][inicioLinha]/matriz[inicioLinha][inicioLinha])
+				matriz[inicioLinha][j].numerador = matriz[inicioLinha][j].numerador * fator.numerador;
+				matriz[inicioLinha][j].denominador = matriz[inicioLinha][j].denominador * fator.denominador;
+
+				/*matriz[i][j].denominador = matriz[i][j].denominador * matriz[inicioLinha][j].denominador;
+				matriz[i][j].numerador = (matriz[i][j].denominador * matriz[inicioLinha][j].denominador)/matriz[i][j].numerador - (matriz[i][j].denominador * matriz[inicioLinha][j].denominador)/matriz[inicioLinha][j].numerador;*/
+			}
+		}
+	}
+}
 /*
 3 4
 r
@@ -103,4 +107,11 @@ r
 2 1 0 1 0 1 0 1
 p
 3 1 -1 1 0 1 3 1
+
+3 4
+r
+0/1 2/1 0/1 0/1
+2/1 0/1 0/1 0/1
+p
+3/1 -1/1 0/1 3/1
 */
