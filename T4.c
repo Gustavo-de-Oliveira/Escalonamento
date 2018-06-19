@@ -65,7 +65,7 @@ int main(int argc, char const *argv[]){
 
 void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha){
 	int totalNumerador = 0, totalDenominador = 0;
-	fracao fator;
+	fracao fator, equacao;
 	for (int i = inicioLinha; i < nEquacoes; ++i){
 		if (matriz[i][inicioLinha].numerador != 0){
 			for (int j = inicioLinha; j < nCoeficientes; ++j){
@@ -91,11 +91,14 @@ void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha){
 		if (fator.numerador != 0){
 			for (int j = inicioLinha; j < nCoeficientes; ++j){
 				//matriz[i][j] -= matriz[inicioLinha][j] * (matriz[i][inicioLinha]/matriz[inicioLinha][inicioLinha])
-				matriz[inicioLinha][j].numerador = matriz[inicioLinha][j].numerador * fator.numerador;
-				matriz[inicioLinha][j].denominador = matriz[inicioLinha][j].denominador * fator.denominador;
+				equacao.numerador = matriz[inicioLinha][j].numerador;
+				equacao.denominador = matriz[inicioLinha][j].denominador;
 
-				/*matriz[i][j].denominador = matriz[i][j].denominador * matriz[inicioLinha][j].denominador;
-				matriz[i][j].numerador = (matriz[i][j].denominador * matriz[inicioLinha][j].denominador)/matriz[i][j].numerador - (matriz[i][j].denominador * matriz[inicioLinha][j].denominador)/matriz[inicioLinha][j].numerador;*/
+				equacao.numerador *= fator.numerador;
+				equacao.denominador *= fator.denominador;
+
+				matriz[i][j].denominador *= equacao.denominador;
+				
 			}
 		}
 	}
