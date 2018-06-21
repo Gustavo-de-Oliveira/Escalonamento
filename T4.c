@@ -12,12 +12,13 @@ typedef struct fracao{
 	int denominador;
 } fracao;
 
+void Escalonar(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha);
 void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha);
+int MenorMultiploComum(int a, int b);
 
 int main(int argc, char const *argv[]){
 	int nEquacoes = 0, nCoeficientes = 0, qntdEquacoes = 0;
 	char objeto;
-	fracao pivo;
 
 	scanf("%d %d", &nEquacoes, &nCoeficientes);
 	scanf("%c", &objeto);
@@ -34,33 +35,76 @@ int main(int argc, char const *argv[]){
 		scanf("%c", &objeto);
 		if(objeto == 'p'){
 			for (int i = 0; i < nCoeficientes; ++i){
-					scanf("%d %d", &matriz[qntdEquacoes][i].numerador, &matriz[qntdEquacoes][i].denominador);
-				}
-				qntdEquacoes++;
-		} else if(objeto == 'r'){
+				scanf("%d %d", &matriz[qntdEquacoes][i].numerador, &matriz[qntdEquacoes][i].denominador);
+			}
+			qntdEquacoes++;
+
+		} else if(objeto == 'r') {
 			for (int i = 0; i < nCoeficientes; ++i){
-					scanf("%d %d", &matriz[qntdEquacoes][i].numerador, &matriz[qntdEquacoes][i].denominador);
-				}
-				qntdEquacoes++;
+				scanf("%d %d", &matriz[qntdEquacoes][i].numerador, &matriz[qntdEquacoes][i].denominador);
+			}
+
+			qntdEquacoes++;
 			for (int i = 0; i < nCoeficientes; ++i){
-					scanf("%d %d", &matriz[qntdEquacoes][i].numerador, &matriz[qntdEquacoes][i].denominador);
-				}
-				qntdEquacoes++;
+				scanf("%d %d", &matriz[qntdEquacoes][i].numerador, &matriz[qntdEquacoes][i].denominador);
+			}
+			qntdEquacoes++;
 		}
 	} while (qntdEquacoes < nEquacoes);
 
-	Swap(matriz, nEquacoes, nCoeficientes, 0);
+	Escalonar(matriz, nEquacoes, nCoeficientes, 0);
 
 	for (int i = 0; i < 3; ++i)
 	{
 		for (int j = 0; j < 4; ++j)
 		{
+			//printf("%d/%d ", matriz[i][j].numerador, matriz[i][j].denominador);
 			printf("%d ", matriz[i][j].numerador/matriz[i][j].denominador);
+			//printf("%d ", matriz[i][j].denominador);
 		}
 		printf("\n");
 	}
 
 	return 0;
+}
+
+void Escalonar(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha){
+	
+	if (inicioLinha+1 == nEquacoes) return;
+	if (matriz[inicioLinha][inicioLinha].numerador == 0) Swap(matriz, nEquacoes, nCoeficientes, inicioLinha);
+
+	fracao pivo, a_equacao, equacao1, equacao;
+	int mmc = 0;
+
+	pivo.numerador = matriz[inicioLinha][inicioLinha].numerador;
+	pivo.denominador = matriz[inicioLinha][inicioLinha].denominador;
+
+	for (int i = inicioLinha+1; i < nEquacoes; ++i){
+		a_equacao.numerador = matriz[i][inicioLinha].numerador;
+		a_equacao.denominador = matriz[i][inicioLinha].denominador;
+
+		for (int j = inicioLinha; j < nCoeficientes; ++j){
+			equacao1.numerador = matriz[inicioLinha][j].numerador;
+			equacao1.denominador = matriz[inicioLinha][j].denominador;
+
+			a_equacao.numerador *= pivo.denominador;
+			a_equacao.denominador *= pivo.numerador;
+
+			equacao1.numerador *= a_equacao.numerador;
+			equacao1.denominador *= a_equacao.denominador;
+
+			mmc = MenorMultiploComum(equacao1.denominador, matriz[i][j].denominador);
+
+			matriz[i][j].numerador = (mmc/matriz[i][j].denominador) * matriz[i][j].numerador;
+			matriz[i][j].denominador = mmc;
+
+			equacao1.numerador = (mmc/equacao1.denominador) * equacao1.numerador;
+
+			matriz[i][j].numerador -= equacao1.numerador;
+		}
+	}
+
+	Escalonar(matriz, nEquacoes, nCoeficientes, inicioLinha+1);
 }
 
 void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha){
@@ -83,33 +127,28 @@ void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha){
 			break;
 		}
 	}
-
-	for (int i = inicioLinha+1; i < nEquacoes; ++i){
-		fator.numerador = matriz[i][inicioLinha].numerador * matriz[inicioLinha][inicioLinha].denominador;
-		fator.denominador = matriz[i][inicioLinha].denominador * matriz[inicioLinha][inicioLinha].numerador;
-
-		if (fator.numerador != 0){
-			for (int j = inicioLinha; j < nCoeficientes; ++j){
-				//matriz[i][j] -= matriz[inicioLinha][j] * (matriz[i][inicioLinha]/matriz[inicioLinha][inicioLinha])
-				equacao.numerador = matriz[inicioLinha][j].numerador;
-				equacao.denominador = matriz[inicioLinha][j].denominador;
-
-				equacao.numerador *= fator.numerador;
-				equacao.denominador *= fator.denominador;
-
-				matriz[i][j].denominador *= equacao.denominador;
-
-				if (matriz[i][j].numerador != 0) matriz[i][j].numerador = matriz[i][j].denominador/matriz[i][j].numerador;
-				if (equacao.numerador != 0) equacao.numerador = matriz[i][j].denominador/equacao.numerador;
-
-				matriz[i][j].numerador -= equacao.numerador;
-				equacao.numerador -= matriz[i][j].numerador;
-			}
-		}
-	}
-
-	Swap(matriz, nEquacoes, nCoeficientes, inicioLinha+1);
 }
+
+int MenorMultiploComum(int num1, int num2) {
+
+    int resto, a, b;
+
+    a = num1;
+    b = num2;
+
+    do {
+        resto = a % b;
+
+        a = b;
+        b = resto;
+
+    } while (resto != 0);
+
+    return ( num1 * num2) / a;
+}
+
+
+
 /*
 3 4
 r
@@ -117,11 +156,4 @@ r
 2 1 0 1 0 1 0 1
 p
 3 1 -1 1 0 1 3 1
-
-3 4
-r
-0/1 2/1 0/1 0/1
-2/1 0/1 0/1 0/1
-p
-3/1 -1/1 0/1 3/1
 */
