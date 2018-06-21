@@ -14,7 +14,7 @@ typedef struct fracao{
 
 void Escalonar(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha);
 void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha);
-int MenorMultiploComum(int a, int b);
+long int MenorMultiploComum(int a, int b);
 
 int main(int argc, char const *argv[]){
 	int nEquacoes = 0, nCoeficientes = 0, qntdEquacoes = 0;
@@ -54,13 +54,19 @@ int main(int argc, char const *argv[]){
 
 	Escalonar(matriz, nEquacoes, nCoeficientes, 0);
 
-	for (int i = 0; i < 3; ++i)
-	{
-		for (int j = 0; j < 4; ++j)
-		{
-			//printf("%d/%d ", matriz[i][j].numerador, matriz[i][j].denominador);
-			printf("%d ", matriz[i][j].numerador/matriz[i][j].denominador);
-			//printf("%d ", matriz[i][j].denominador);
+	int flag = 0;
+
+	for (int i = 0; i < nEquacoes; ++i)
+		if(matriz[i][0].numerador == 0 && matriz[i][1].numerador == 0 && matriz[i][2].numerador == 0 && matriz[i][3].numerador != 0) flag = 1;
+
+	if (flag == 1) printf("nao\n");
+	else printf("sim\n");
+
+	for (int i = 0; i < nEquacoes; ++i){
+		for (int j = 0; j < nCoeficientes; ++j){
+			if (matriz[i][j].numerador/matriz[i][j].denominador >= 0) printf("%d", matriz[i][j].numerador/matriz[i][j].denominador);
+			else printf("%d/%d", matriz[i][j].numerador, matriz[i][j].denominador);
+			if (i != nCoeficientes-1)printf("\t");;
 		}
 		printf("\n");
 	}
@@ -73,8 +79,8 @@ void Escalonar(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinh
 	if (inicioLinha+1 == nEquacoes) return;
 	if (matriz[inicioLinha][inicioLinha].numerador == 0) Swap(matriz, nEquacoes, nCoeficientes, inicioLinha);
 
-	fracao pivo, a_equacao, equacao1, equacao;
-	int mmc = 0;
+	fracao pivo, a_equacao, equacao1;
+	long int mmc = 0;
 
 	pivo.numerador = matriz[inicioLinha][inicioLinha].numerador;
 	pivo.denominador = matriz[inicioLinha][inicioLinha].denominador;
@@ -109,7 +115,6 @@ void Escalonar(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinh
 
 void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha){
 	int totalNumerador = 0, totalDenominador = 0;
-	fracao fator, equacao;
 	for (int i = inicioLinha; i < nEquacoes; ++i){
 		if (matriz[i][inicioLinha].numerador != 0){
 			for (int j = inicioLinha; j < nCoeficientes; ++j){
@@ -129,25 +134,20 @@ void Swap(fracao **matriz, int nEquacoes, int nCoeficientes, int inicioLinha){
 	}
 }
 
-int MenorMultiploComum(int num1, int num2) {
-
-    int resto, a, b;
+long int MenorMultiploComum(int num1, int num2) {
+	long int resto = 0, a = 0, b = 0;
 
     a = num1;
     b = num2;
 
-    do {
+    do{
         resto = a % b;
-
         a = b;
         b = resto;
-
     } while (resto != 0);
 
     return ( num1 * num2) / a;
 }
-
-
 
 /*
 3 4
